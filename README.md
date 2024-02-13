@@ -1,0 +1,1 @@
+# pink-mobile-demo-app
