@@ -1,46 +1,89 @@
-import Head from 'next/head';
-import Layout, { siteTitle } from '../components/layout';
-import utilStyles from '../styles/utils.module.css';
-import { getSortedPostsData } from '../lib/posts';
-import Link from 'next/link';
-import Date from '../components/date';
+import React, { useState } from "react";
+import utilStyles from "../styles/utils.module.css";
+import TopNavigation from "./components/TopNavigation";
+import {
+	TextField,
+	Typography,
+	List,
+	ListItem,
+	ListItemText,
+	Box,
+} from "@material-ui/core";
 
-export default function Home({ allPostsData }) {
-  return (
-    <Layout home>
-      <Head>
-        <title>{siteTitle}</title>
-      </Head>
-      <section className={utilStyles.headingMd}>
-        <p>[Your Self Introduction]</p>
-        <p>
-          (This is a sample website - you’ll be building a site like this in{' '}
-          <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
-        </p>
-      </section>
-      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-        <h2 className={utilStyles.headingLg}>Blog</h2>
-        <ul className={utilStyles.list}>
-          {allPostsData.map(({ id, date, title }) => (
-            <li className={utilStyles.listItem} key={id}>
-              <Link href={`/posts/${id}`}>{title}</Link>
-              <br />
-              <small className={utilStyles.lightText}>
-                <Date dateString={date} />
-              </small>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </Layout>
-  );
-}
+export default function Home() {
+	const [tabValue, setTabValue] = useState(0);
+	const [inputValue, setInputValue] = useState("");
+	const [representatives, setRepresentatives] = useState([
+		{
+			id: 1,
+			name: "Representative A",
+			users: ["Allowed User A", "Allowed User B"],
+			canAddUser: true,
+		},
+		{
+			id: 2,
+			name: "Representative B",
+			users: ["Allowed User A", "Allowed User C"],
+			canAddUser: false,
+		},
+	]);
 
-export async function getStaticProps() {
-  const allPostsData = getSortedPostsData();
-  return {
-    props: {
-      allPostsData,
-    },
-  };
+	const handleTabChange = (value) => {
+		setTabValue(value);
+	};
+
+	const handleInputChange = (event) => {
+		setInputValue(event.target.value);
+	};
+
+	const handleKeyPress = (event, repId) => {
+		if (event.key === "Enter") {
+			console.log("User added:", inputValue);
+			// Update the representatives state to include the new user
+			setRepresentatives((reps) =>
+				reps.map((rep) => {
+					if (rep.id === repId && rep.canAddUser) {
+						return { ...rep, users: [...rep.users, inputValue] };
+					}
+					return rep;
+				})
+			);
+			setInputValue("");
+		}
+	};
+
+	return (
+		<Box>
+			<Typography component="h1" variant="h5" style={{ color: "pink" }}>
+				Pink-Mobile
+			</Typography>
+			<TopNavigation onTabChange={handleTabChange} tabValue={tabValue} />
+			<Box>
+				<section className={utilStyles.headingMd}>
+					{tabValue === 0 &&
+						representatives.map((rep, index) => (
+							<div key={rep.id}>
+								<Typography variant="h6">{rep.name}</Typography>
+								<List>
+									{rep.users.map((user, userIndex) => (
+										<ListItem key={userIndex}>
+											<ListItemText primary={user} />
+										</ListItem>
+									))}
+								</List>
+								{rep.canAddUser && (
+									<TextField
+										label="Add another user"
+										value={inputValue}
+										onChange={handleInputChange}
+										onKeyPress={(event) => handleKeyPress(event, rep.id)}
+										fullWidth
+									/>
+								)}
+							</div>
+						))}
+				</section>
+			</Box>
+		</Box>
+	);
 }
