@@ -14,9 +14,20 @@ export default async function handler(req, res) {
     });
   }
 
-  const newPlan = await setUserAttributes(userId, { Plan: plan });
+  const isAllowed = await authorize(userId, "change", {
+    type: "plan",
+    attributes: { owner: userId },
+  });
+  if (!isAllowed) {
+    return res.status(403).json({
+      error: `User ${userId} is not allowed to change plan for ${userId}`,
+    });
+  }
 
-  console.log(newPlan);
+  const newPlan = await setUserAttributes(userId, {
+    Plan: plan,
+    blocked: false,
+  });
 
   return res.status(200).json({ success: true });
 }
