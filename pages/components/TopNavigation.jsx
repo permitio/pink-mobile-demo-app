@@ -1,6 +1,5 @@
 import React from 'react';
-import { AppBar, Tabs, Tab, Typography } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
+import { AppBar, Tabs, Tab } from '@material-ui/core';
 
 export default function TopNavigation({ onTabChange, tabValue }) {
   const handleTabChange = (event, newValue) => {
@@ -10,8 +9,8 @@ export default function TopNavigation({ onTabChange, tabValue }) {
   return (
     <AppBar position="static">
       <Tabs value={tabValue} onChange={handleTabChange} centered>
-        <Tab label="Representative" />
         <Tab label="Manager" />
+        <Tab label="Representative" />
       </Tabs>
     </AppBar>
   );
