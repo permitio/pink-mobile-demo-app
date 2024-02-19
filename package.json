@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/cache": "^11.11.0",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@material-ui/core": "^4.12.4",
+    "@mui/material-nextjs": "^5.15.9",
+    "date-fns": "^2.29.3",
+    "framer-motion": "^11.0.5",
+    "gray-matter": "^4.0.3",
+    "next": "latest",
+    "permitio": "^2.2.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "remark": "^14.0.2",
+    "remark-html": "^15.0.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
