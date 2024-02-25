@@ -16,7 +16,7 @@ The app is built with Next.js and uses the free-tier of the Permit.io authorizat
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/en) for the application itself
-- [Docker](https://docs.docker.com/engine/install/) (for the Permit.io local policy engine)
+- [Docker](https://docs.docker.com/engine/install/) (for the Permit's local policy engine)
 - A [free account of Permit.io](https://app.permit.io) (for permissions management)
 
 ### Installation
@@ -25,15 +25,16 @@ The app is built with Next.js and uses the free-tier of the Permit.io authorizat
    ```
    npm install
    ```
-2. Open an account in Permit.io and copy your API key to the `.env` file in the following format:
+2. Paste the following variables in the `.env` file. Use [your API key](https://docs.permit.io/getting-started/connecting-your-app) from your Permit account:
    ```
+   PDP_URL =http://localhost:7766
    PERMIT_TOKEN=your-api-key
    ```
-3. From a terminal window in the root of the project, setup your new Permit.io configuration by running the following command:
+3. From a terminal window in the root of the project, setup your new Permit configuration by running the following command:
    ```
    node setup
    ```
-4. Run the local Permit.io decision point (PDP) as a docker container by running the following command:
+4. Run the local Permit decision point (PDP) as a docker container by running the following command:
    ```
    docker run -p 7766:7000 --env PDP_API_KEY=<your-api-key> --env PDP_DEBUG=true permitio/pdp-v2:latest
    ```
