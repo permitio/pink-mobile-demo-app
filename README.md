@@ -14,9 +14,9 @@ The app is built with Next.js and uses the free-tier of the Permit.io authorizat
 
 ### Prerequisites
 
-- Node.js (for the application itself)
-- Docker (for the Permit.io local policy engine)
-- A free account in Permit.io (for permissions management)
+- [Node.js](https://nodejs.org/en) for the application itself
+- [Docker](https://docs.docker.com/engine/install/) (for the Permit.io local policy engine)
+- A [free account of Permit.io](https://app.permit.io) (for permissions management)
 
 ### Installation
 
@@ -55,45 +55,44 @@ The application consist three tabs, each of them represent a different type of u
 
 ### Representative Permissions flow
 
-To demonstrate the flexiablity and granularity of the permissions in the application, let's start from the representative tab. As you can see we can manage in the following flows:
+To demonstrate the flexibility and granularity of the permissions in the application, let's start from the representative tab. As you can see, we can manage the following flows:
 
 - **Happy path**
 
-  _A representative is choosing a user they are allowed to manage, and can perform a plan change._
+    _A representative is choosing a user they are allowed to manage and can perform a plan change._
 
-  To test that, choose the `Sirius Black` as a representative, and `Harry Potter` as a customer. You can see that the `Change Plan` button is enabled, and you can change the plan.
+    To test that, choose `Sirius Black` as a representative and `Harry Potter` as a customer. You can see that the `Change Plan` button is enabled, and you can change the plan.
 
 - **Unassign representative**
 
-  _A representative is not allowed to view the plan for a customer they are not assigned to._
+    _A representative is not allowed to view the plan for a customer they are not assigned to._
 
-  To test that, try to change the plan for `Ron Weasley`, you'll see that the `Change Plan` operation is returning an error, as the representative is not assigned to this customer.
+    To test that, try to change the plan for `Ron Weasley`. You'll see that the `Change Plan` operation is returning an error as the representative is not assigned to this customer.
 
-- **Unallowed operation**
+- **Unauthorized operation**
 
-  _A representative prevented to perform an operation on a customer without proper permissions._
+    _A representative is prevented from performing an operation on a customer without proper permissions._
 
-  To test that, try to view the plan for `Hermione Granger`, you'll get an error. The reason is that Hermione is not an owner of a plan, but only a member of Harry plan.
+    To test that, try to view the plan for `Hermione Granger`. You'll get an error. The reason is that Hermione is not an owner of a plan but only a member of Harry's plan.
 
 - **Blocked user**
 
-  _A representative is not allowed to perform an operation on a blocked user._
+    _A representative is not allowed to perform an operation on a blocked user._
 
-  To test that, try to change the representative to `Luna Lovegood`, and change Ron's plan, you'll see that although Luna is assigned to Ron, she is blocked from performing any operation on Ron's plan as Ron is blocked on the system.
+    To test that, try to change the representative to `Luna Lovegood` and change Ron's plan. You'll see that although Luna is assigned to Ron, she is blocked from performing any operation on Ron's plan as Ron is blocked in the system.
 
 The following diagram shows the various permission checks that are performed in the representative flow:
 TBD add the representative flow diagram
 
 ### Dynamic Policy Changes
 
-To test dynamic policy change, let's go to the Manager screen, and assign Ron's user to `Sirius Black` by adding their email `ron@weasley.me` to `Sirius` list.
-After you performed this change, you can go back to the representative tab, and see that now Sirius is allowed change Ron's plan (although Ron his block, so it won't be possible to change the plan).
+To test dynamic policy changes, let's go to the Manager screen and assign Ron's user to `Sirius Black` by adding their email `ron@weasley.me` to `Sirius`'s list.
+After you have made this change, you can go back to the representative tab and see that now Sirius is allowed to change Ron's plan (although Ron is blocked, so it won't be possible to change the plan).
 
-### Customer Permissions flow
+### Customer Permissions Flow
 
-With the same policy model, but impersonating the customer, you can see that the customer can only manage their own plan, and not the plans of other customers.
-You can also see that if you'll impersonate `Hermione Granger`, you'll see that she can't manage her own plan, as she is not the owner of the plan, but only a member of Harry's plan.
+With the same policy model, but impersonating the customer, you can see that the customer can only manage their own plan and not the plans of other customers.
+You can also see that if you impersonate `Hermione Granger`, you'll see that she can't manage her own plan as she is not the owner of the plan, but only a member of Harry's plan.
 
 ## Learn More
-To learn more on the way we modeld the permissions in the application, you can read the following blog documentation that explains the way we modeled the permissions in the application: TBD add the link to the blog post.
-
+To learn more about the way we modeled the permissions in the application, you can read the following blog documentation that explains the way we modeled the permissions in the application: https://docs.permit.io/modeling/pink-mobile
