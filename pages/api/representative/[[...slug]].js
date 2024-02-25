@@ -34,7 +34,7 @@ const assign = async (req, res) => {
 
 	const assigned = await assignUser(
 		representative,
-		"Editor",
+		"editor",
 		`account:${toAssign.split("@")[0]}`
 	);
 
@@ -55,7 +55,7 @@ const unassign = async (req, res) => {
 
 	const unassigned = await unassignUser(
 		representative,
-		"Editor",
+		"editor",
 		`account:${toAssign.split("@")[0]}`
 	);
 
