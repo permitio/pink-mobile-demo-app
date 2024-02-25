@@ -4,35 +4,37 @@ Pink Mobile is a simple mobile plan management application that demonstrates the
 
 Pink Mobile utilize the RBAC, ReBAC, ABAC models and use impersonation of three different user personas: Customer, Representative, and Manager to demonstrates how each user gets only the proper permissions for them.
 
-TBD add a screenshot of the three screens
+![screenshots](https://github.com/permitio/pink-mobile-demo-app/assets/4082578/6ee09c6c-8c2d-4ead-a739-d628917aa598)
 
 The app is built with Next.js and uses the free-tier of the Permit.io authorization service to manage permissions.
 
 ## Run the Application
 
-> If you prefer to use a hosted version of the application, you can access it [here](https://pink-mobile-demo-app.vercel.app/) TBD change the link.
+> [!NOTE]
+> If you prefer to use a hosted version of the application, you can access it [here](https://pink-mobile.up.railway.app/)
 
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/en) for the application itself
-- [Docker](https://docs.docker.com/engine/install/) (for the Permit.io local policy engine)
+- [Docker](https://docs.docker.com/engine/install/) (for the Permit's local policy engine)
 - A [free account of Permit.io](https://app.permit.io) (for permissions management)
 
 ### Installation
 
-1. Clone the repository, and install the dependencies by running
+1. Clone the repository and install the dependencies by running
    ```
    npm install
    ```
-2. Open an account in Permit.io and copy your API key to the `.env` file in the following format:
+2. Paste the following variables in the `.env` file. Use [your API key](https://docs.permit.io/getting-started/connecting-your-app) from your Permit account:
    ```
+   PDP_URL =http://localhost:7766
    PERMIT_TOKEN=your-api-key
    ```
-3. From a terminal window in the root of the project, setup your new Permit.io environment by running the following command:
+3. From a terminal window in the root of the project, setup your new Permit configuration by running the following command:
    ```
    node setup
    ```
-4. Run the local Permit.io decision point (PDP) as a docker container by running the following command:
+4. Run the local Permit decision point (PDP) as a docker container by running the following command:
    ```
    docker run -p 7766:7000 --env PDP_API_KEY=<your-api-key> --env PDP_DEBUG=true permitio/pdp-v2:latest
    ```
@@ -41,21 +43,21 @@ The app is built with Next.js and uses the free-tier of the Permit.io authorizat
    npm run dev
    ```
 
-After you performed this steps, you'll be able to browse to the application at[http://localhost:3000](http://localhost:3000) and impersonate the roles by using the different tabs.
+After you perform these steps, you'll be able to browse the application at[http://localhost:3000](http://localhost:3000) and impersonate the roles by using the different tabs.
 
 ## Test the Application
 
-The application consist three tabs, each of them represent a different type of user פקרדםמשד that could perform different operations.
+The application consists of three tabs, each of which represents a different type of user פקרדםמשד that could perform different operations.
 
 1. **Manager** - admins that manage agents (representatives) and can assign customers to them so they can manage their plans.
-2. **Representative** - agents that can manage the customers and their plans. Here, the permissions is using relationships between agent and their customers to check what they are allowed to do.
+2. **Representative** - agents that can manage the customers and their plans. Here, the permissions are using relationships between agent and their customers to check what they are allowed to do.
 3. **Customer** - end users that can manage their own plans only in case they have the proper permissions for that.
 
 > To simplify the application code, we haven't implemented proper authentication. Instead of verifying user identities, we are using user inputs to impersonate various users. <br> [Learn more about the difference between authentication and authorization](https://permit.io/blog/authentication-vs-authorization).
 
 ### Representative Permissions flow
 
-To demonstrate the flexibility and granularity of the permissions in the application, let's start from the representative tab. As you can see, we can manage the following flows:
+To demonstrate the flexibility and granularity of the permissions in the application, let's start with the representative tab. As you can see, we can manage the following flows:
 
 - **Happy path**
 
@@ -73,7 +75,7 @@ To demonstrate the flexibility and granularity of the permissions in the applica
 
     _A representative is prevented from performing an operation on a customer without proper permissions._
 
-    To test that, try to view the plan for `Hermione Granger`. You'll get an error. The reason is that Hermione is not an owner of a plan but only a member of Harry's plan.
+    To test that, try to view the plan for `Hermione Granger` you'll get an error. The reason is that Hermione is not an owner of any plan but only a member of Harry's plan.
 
 - **Blocked user**
 
@@ -82,7 +84,9 @@ To demonstrate the flexibility and granularity of the permissions in the applica
     To test that, try to change the representative to `Luna Lovegood` and change Ron's plan. You'll see that although Luna is assigned to Ron, she is blocked from performing any operation on Ron's plan as Ron is blocked in the system.
 
 The following diagram shows the various permission checks that are performed in the representative flow:
-TBD add the representative flow diagram
+![rep_flow](https://github.com/permitio/pink-mobile-demo-app/assets/4082578/2217a080-a4a3-4387-a57b-eaa1d1d83c7e)
+
+
 
 ### Dynamic Policy Changes
 
