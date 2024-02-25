@@ -14,7 +14,7 @@ const ManagerTab = ({ representatives, unassignUserFromRepresentative, addUserTo
 
   return (
     <VStack spacing={2} mt={6} align="stretch">
-      {representatives.map((rep) => (
+      {representatives?.map((rep) => (
         <Box key={rep.key} p={5} boxShadow="md" borderRadius="lg" bg="white" my={3}>
           <Text fontSize="md" fontWeight="bold" mb={3}>{`${rep.first_name} ${rep.last_name}`}</Text>
           <List spacing={3}>

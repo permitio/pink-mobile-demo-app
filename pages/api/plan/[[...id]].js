@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 	}
 
 	const newPlan = await setUserAttributes(userId, {
-		Plan: plan,
+		plan,
 		blocked: false,
 	});
 

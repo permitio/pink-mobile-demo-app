@@ -108,20 +108,20 @@ const RepresentativeTab = ({ representatives, selectedRepresentative, setSelecte
     onClose(); 
     };
     
-    const currentRepresentative = representatives.find(rep => rep.key === selectedRepresentative);
+    const currentRepresentative = representatives?.find(rep => rep.key === selectedRepresentative);
 
     console.log(userData);
   
     return (
         <Box mt={8} mx={4} p={4} boxShadow="xl" borderRadius="lg" bg="white" width={"450px"}>
           <Select placeholder="Select Representative" size="sm" value={selectedRepresentative} onChange={handleRepresentativeChange} mb={4}>
-            {representatives.map((rep) => (
+            {representatives?.map((rep) => (
               <option key={rep.key} value={rep.key}>{rep.first_name} {rep.last_name}</option>
             ))}
           </Select>
           {currentRepresentative && currentRepresentative.users && (
             <Select placeholder="Select User" size="sm" value={selectedUser} onChange={handleUserChange} mb={4}>
-              {allUsers.map((user) => (
+              {allUsers?.map((user) => (
                 <option key={user.key} value={user.key}>{user.first_name} {user.last_name}</option>
               ))}
             </Select>

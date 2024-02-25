@@ -1,9 +1,7 @@
 const { Permit } = require("permitio");
-require("dotenv").config({ path: ".env.local" });
+require("dotenv").config();
 
-const PERMIT_SDK_KEY =
-  "permit_key_NkZb81sijqTcisFnlu41EXLfa7gOXldkSlbRbahFQ1CmFtaQOs7Wn2wzZv9BTvpLl7YEeTSVAJWM7ZXI3Caa0T";
-//   "permit_key_bsBlaXBGkdBKZ9z9vN2gQI0MP10oAvoKz6EMUeKKQl1bZv192UnL5587PFwv4theBi4WyzZGpGaYNgvbKXfnq1";
+const PERMIT_SDK_KEY = process.env.PERMIT_TOKEN;
 
 const appUsers = [
   {
@@ -230,18 +228,21 @@ const users = async () => {
         first_name,
         last_name,
         attributes: {
-          blocked: false,
+          blocked: email.indexOf("ron") === 0 ? true : false,
+          plan: email.indexOf("ron") === 0 ? "Standard" : "VIP",
         },
       })
     )
   );
-  await permit.api.roleAssignments.bulkAssign(
-    appUsers.map(({ email }) => ({
-      role: "owner",
-      resource_instance: `account:${email.split("@")[0]}`,
-      user: email,
-      tenant: "default",
-    }))
+  await Promise.all(
+    appUsers.map(({ email }) =>
+      permit.api.roleAssignments.assign({
+        role: "owner",
+        resource_instance: `account:${email.split("@")[0]}`,
+        user: email,
+        tenant: "default",
+      })
+    )
   );
   await Promise.all(
     appUsers.map(({ email }) =>
@@ -279,6 +280,11 @@ const users = async () => {
     user: "hermione@granger.app",
     resource_instance: "account:harry",
   });
+  await permit.api.roleAssignments.unassign({
+    role: "owner",
+    user: "hermione@granger.app",
+    resource_instance: "account:hermione",
+  });
   await Promise.all(
     appUsers.map(({ email }) =>
       permit.api.relationshipTuples.create({
@@ -292,12 +298,18 @@ const users = async () => {
 };
 
 (async () => {
-  await resources();
-  console.log("Resources created");
-  await roles();
-  console.log("Roles created");
-  await conditionSets();
-  console.log("Condition sets created");
-  await users();
-  console.log("Users created");
+  // await resources();
+  // console.log("Resources created");
+  // await roles();
+  // console.log("Roles created");
+  // await conditionSets();
+  // console.log("Condition sets created");
+  // await users();
+  // console.log("Users created");
+  await permit.api.roleAssignments.unassign({
+    role: "owner",
+    user: "hermione@granger.app",
+    resource_instance: "account:hermione",
+    tenant: "default",
+  });
 })();

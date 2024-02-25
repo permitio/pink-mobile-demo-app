@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   }
 
   const {
-    attributes: { Plan: plan },
+    attributes: { plan },
   } = await getUser(id);
 
   return res.status(200).json({ plan });

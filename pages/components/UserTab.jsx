@@ -8,7 +8,7 @@ const UserTab = ({ allUsers }) => {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    const user = allUsers.find(user => user.key === selectedUser);
+    const user = allUsers?.find(user => user.key === selectedUser);
     setUserData(user); 
   }, [selectedUser, allUsers]);
 
@@ -20,7 +20,7 @@ const UserTab = ({ allUsers }) => {
   const handlePlanChangeUser = async () => {
     setErrorMessage('');
     const userKey = selectedUser;
-    const newPlan = userData.attributes.Plan === 'Standard' ? 'VIP' : 'Standard';
+    const newPlan = userData.attributes.plan === 'Standard' ? 'VIP' : 'Standard';
 
     try {
       const response = await fetch(`/api/plan/${userKey}/${newPlan}`, {
@@ -29,12 +29,12 @@ const UserTab = ({ allUsers }) => {
           'Content-Type': 'application/json',
           'X-User': userKey, 
         },
-        body: JSON.stringify({ Plan: newPlan }) 
+        body: JSON.stringify({ plan: newPlan }) 
       });
 
       if (response.ok) {
         console.log('Plan changed successfully');
-        setUserData({ ...userData, attributes: { ...userData.attributes, Plan: newPlan } });
+        setUserData({ ...userData, attributes: { ...userData.attributes, plan: newPlan } });
       } else {
         const errorData = await response.json(); 
         setErrorMessage(errorData.error);
@@ -50,7 +50,7 @@ const UserTab = ({ allUsers }) => {
     <Box mt={8} mx={4} p={4} boxShadow="xl" borderRadius="lg" bg="white" width={"450px"}>
       <VStack spacing={4}>
         <Select placeholder="Select User" size="sm" value={selectedUser} onChange={handleChange}>
-          {allUsers.map((user) => (
+          {allUsers?.map((user) => (
             <option key={user.key} value={user.key}>
               {`${user.first_name} ${user.last_name}`}
             </option>
@@ -62,8 +62,8 @@ const UserTab = ({ allUsers }) => {
             <Text fontSize="sm">Email: {userData.email}</Text>
             <Text fontSize="sm">
               Plan:
-              <Badge ml={2} colorScheme={userData.attributes.Plan === 'VIP' ? 'green' : 'blue'}>
-                {userData.attributes.Plan}
+              <Badge ml={2} colorScheme={userData.attributes.plan === 'VIP' ? 'green' : 'blue'}>
+                {userData.attributes.plan}
               </Badge>
             </Text>
             <Button size={"xs"} my={4} colorScheme="blue" onClick={onOpen}>
