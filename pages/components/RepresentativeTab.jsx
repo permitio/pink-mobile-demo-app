@@ -30,7 +30,7 @@ const RepresentativeTab = ({ representatives, selectedRepresentative, setSelecte
             if (!selectedUser) return;
 
             try {
-              const response = await fetch(`http://localhost:3000/api/account/${selectedUser}`, {
+              const response = await fetch(`/api/account/${selectedUser}`, {
                 method: 'GET', 
                 headers: {
                   'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const RepresentativeTab = ({ representatives, selectedRepresentative, setSelecte
 
         const fetchAllUsers = async () => {
           try {
-            const response = await fetch(`http://localhost:3000/api/user`, {
+            const response = await fetch(`/api/user`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',

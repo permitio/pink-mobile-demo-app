@@ -14,7 +14,7 @@ export default function Home() {
 	const [allUsers, setAllUsers] = useState([]);
 
 	async function fetchRepresentatives() {
-		const response = await fetch("http://localhost:3000/api/representative", {
+		const response = await fetch("/api/representative", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -26,7 +26,7 @@ export default function Home() {
 	}
 
 	async function fetchUsers() {
-		const response = await fetch("http://localhost:3000/api/user", {
+		const response = await fetch("/api/user", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -47,7 +47,7 @@ export default function Home() {
 	};
 
 	const addUserToRepresentative = async (repId, userEmail) => {
-		const url = `http://localhost:3000/api/representative/${repId}/${userEmail}`;
+		const url = `/api/representative/${repId}/${userEmail}`;
 		try {
 			const response = await fetch(url, {
 				method: "POST",
@@ -66,7 +66,7 @@ export default function Home() {
 	};
 
 	const unassignUserFromRepresentative = async (repId, userId) => {
-		const url = `http://localhost:3000/api/representative/${repId}/${userId}`;
+		const url = `/api/representative/${repId}/${userId}`;
 		try {
 			const response = await fetch(url, {
 				method: "DELETE",
