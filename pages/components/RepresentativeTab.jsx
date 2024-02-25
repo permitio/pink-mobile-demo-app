@@ -113,7 +113,7 @@ const RepresentativeTab = ({ representatives, selectedRepresentative, setSelecte
     console.log(userData);
   
     return (
-        <Box mt={8} mx={4} p={4} boxShadow="xl" borderRadius="lg" bg="white" width={"450px"}>
+        <Box mt={8} mx={4} p={4} boxShadow="xl" borderRadius="lg" bg="white" width={"320px"}>
           <Select placeholder="Select Representative" size="sm" value={selectedRepresentative} onChange={handleRepresentativeChange} mb={4}>
             {representatives?.map((rep) => (
               <option key={rep.key} value={rep.key}>{rep.first_name} {rep.last_name}</option>

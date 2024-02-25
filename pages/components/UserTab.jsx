@@ -47,7 +47,7 @@ const UserTab = ({ allUsers }) => {
   };
 
   return (
-    <Box mt={8} mx={4} p={4} boxShadow="xl" borderRadius="lg" bg="white" width={"450px"}>
+    <Box mt={8} mx={4} p={4} boxShadow="xl" borderRadius="lg" bg="white" width={"320px"}>
       <VStack spacing={4}>
         <Select placeholder="Select User" size="sm" value={selectedUser} onChange={handleChange}>
           {allUsers?.map((user) => (
