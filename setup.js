@@ -284,6 +284,7 @@ const users = async () => {
     role: "owner",
     user: "hermione@granger.app",
     resource_instance: "account:hermione",
+    tenant: "default",
   });
   await Promise.all(
     appUsers.map(({ email }) =>
@@ -298,18 +299,12 @@ const users = async () => {
 };
 
 (async () => {
-  // await resources();
-  // console.log("Resources created");
-  // await roles();
-  // console.log("Roles created");
-  // await conditionSets();
-  // console.log("Condition sets created");
-  // await users();
-  // console.log("Users created");
-  await permit.api.roleAssignments.unassign({
-    role: "owner",
-    user: "hermione@granger.app",
-    resource_instance: "account:hermione",
-    tenant: "default",
-  });
+  await resources();
+  console.log("Resources created");
+  await roles();
+  console.log("Roles created");
+  await conditionSets();
+  console.log("Condition sets created");
+  await users();
+  console.log("Users created");
 })();
