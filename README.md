@@ -2,7 +2,7 @@
 
 Pink Mobile is a simple mobile plan management application that demonstrates the basic principles of fine-grained authorization using Permit.io.
 
-Pink Mobile utilize the RBAC, ReBAC, ABAC models and use impersonation of three different user personas: Customer, Representative, and Manager to demonstrates how each user gets only the proper permissions for them.
+Pink Mobile utilizes the RBAC, ReBAC, and ABAC models. It uses impersonation of three different user personas: Customer, Representative, and Manager, to demonstrate how each user gets only the proper permissions.
 
 ![screenshots](https://github.com/permitio/pink-mobile-demo-app/assets/4082578/6ee09c6c-8c2d-4ead-a739-d628917aa598)
 
@@ -47,7 +47,7 @@ After you perform these steps, you'll be able to browse the application at[http:
 
 ## Test the Application
 
-The application consists of three tabs, each of which represents a different type of user פקרדםמשד that could perform different operations.
+The application consists of three tabs, each of which represents a different type of user personas that could perform different operations.
 
 1. **Manager** - admins that manage agents (representatives) and can assign customers to them so they can manage their plans.
 2. **Representative** - agents that can manage the customers and their plans. Here, the permissions are using relationships between agent and their customers to check what they are allowed to do.
