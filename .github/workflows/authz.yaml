@@ -1,4 +1,4 @@
-name: Release permit python SDK
+name: demo-new-env-copy-print-api-key
 
 on:
   pull_request:
@@ -70,25 +70,25 @@ jobs:
         }'
 
     - name: Comment PR with api_key of new env
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.TOKEN_GITHUB }}
-          script: |
-            if ('${{ github.event_name }}' != 'pull_request') {
-              console.log('Not a PR, skipping');
-              return;
-            }
-            const { data } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number
-            });
-            const comment = `API Key of the new environment pr-${{ env.PR_NUMBER }}: ${{ env.ENV_API_KEY }}`;
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.payload.pull_request.number,
-              body: comment
-            });
-            console.log(`Commented on PR with: ${comment}`);
-    
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.TOKEN_GITHUB }}
+        script: |
+          if ('${{ github.event_name }}' != 'pull_request') {
+            console.log('Not a PR, skipping');
+            return;
+          }
+          const { data } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.payload.pull_request.number
+          });
+          const comment = `API Key of the new environment pr-${{ env.PR_NUMBER }}: ${{ env.ENV_API_KEY }}`;
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.payload.pull_request.number,
+            body: comment
+          });
+          console.log(`Commented on PR with: ${comment}`);
+  
