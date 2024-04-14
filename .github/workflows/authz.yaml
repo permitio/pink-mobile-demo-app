@@ -1,4 +1,4 @@
-name: demo-new
+name: demo-new-env-copy-print-api-key
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ env:
 
 jobs:
   demo-label:
-    if: ${{ github.event.label.name == '${{ env.PR_LABEL }}' }}
+    #if: ${{ github.event.label.name == '${{ env.PR_LABEL }}' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
