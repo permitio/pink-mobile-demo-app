@@ -7,7 +7,7 @@ on: push
 env:
   PROJECT_ID: 538e459351a847058fe28f1e6679b87b #Demo project id (under 'Permit.io Tests' workspace), project Demo
   PR_LABEL: authz
-  PR_NUMBER: ${{ github.event.number }}
+  PR_NUMBER: ${{ github.event.pull_request.number }}
 
 jobs:
   demo-label:
@@ -42,7 +42,7 @@ jobs:
         # Extract the secret from the response which is the API_KEY of the new env
         echo "ENV_API_KEY=$(echo "$response" | jq -r '.secret')" >> $GITHUB_ENV
 
-        echo "New env api key: $ENV_API_KEY"
+        echo "New env api key: ${{ env.ENV_API_KEY }}"
     
     - name: Fetch Development env id
       run: |
@@ -53,7 +53,7 @@ jobs:
         # Extract and echo the ID of the "dev" environment
         echo "DEV_ID=$("$response" | jq -r '.[] | select(.key == "dev") | .id')" >> $GITHUB_ENV
 
-        echo "Development env ID is: $DEV_ID"
+        echo "Development env ID is: ${{ env.DEV_ID }}"
 
 
     - name: Copy from 'Development' to 'pr-${{ env.PR_NUMBER }}'
