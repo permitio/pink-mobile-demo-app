@@ -7,7 +7,6 @@ on: push
 env:
   PROJECT_ID: 538e459351a847058fe28f1e6679b87b #Demo project id (under 'Permit.io Tests' workspace), project Demo
   PR_LABEL: authz
-  PR_NUMBER: ${{ github.event.pull_request.number }}
 
 jobs:
   demo-label:
@@ -17,15 +16,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Creation env pr-${{ env.PR_NUMBER }} under 'Permit.io Tests' workspace, project Demo
+    - name: Extract branch name
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      id: extract_branch
+
+    - name: Creation env pr-${{ steps.extract_branch.outputs.branch }} under 'Permit.io Tests' workspace, project Demo
       run: |
         response=$(curl -X POST \
           https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs \
           -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
           -H 'Content-Type: application/json' \
           -d '{
-          "key": "pr-${{ env.PR_NUMBER }}",
-          "name": "pr-${{ env.PR_NUMBER }}"
+          "key": "pr-${{ steps.extract_branch.outputs.branch }}",
+          "name": "pr-${{ steps.extract_branch.outputs.branch }}"
         }')
 
         # Extract the new env id
@@ -56,7 +59,7 @@ jobs:
         echo "Development env ID is: $DEV_ID"
 
 
-    - name: Copy from 'Development' to 'pr-${{ env.PR_NUMBER }}'
+    - name: Copy from 'Development' to 'pr-${{ steps.extract_branch.outputs.branch }}'
       run: |
         curl -X POST https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs/${{ env.DEV_ID }}/copy \
           -H 'Authorization: Bearer {{ secrets.PROJECT_API_KEY }}' \
@@ -81,7 +84,7 @@ jobs:
             repo: context.repo.repo,
             pull_number: context.payload.pull_request.number
           });
-          const comment = `API Key of the new environment pr-${{ env.PR_NUMBER }}: ${{ env.ENV_API_KEY }}`;
+          const comment = `API Key of the new environment pr-${{ steps.extract_branch.outputs.branch }}: ${{ env.ENV_API_KEY }}`;
           await github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
