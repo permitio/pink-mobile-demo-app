@@ -38,7 +38,7 @@ jobs:
     - name: Fetch API_KEY of ${{ env.ENV_ID }}
       run: |
         response=$(curl -X GET \
-          https://api.permit.io/v2/api-key/${{ env.PROJECT_ID }}/${{ env.${{ env.ENV_ID }} }} \
+          https://api.permit.io/v2/api-key/${{ env.PROJECT_ID }}/${{ env.ENV_ID }} }} \
           -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}')
 
         # Extract the secret from the response which is the API_KEY of the new env
