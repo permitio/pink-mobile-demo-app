@@ -84,10 +84,10 @@ jobs:
       with:
         github-token: ${{ secrets.TOKEN_GITHUB }}
         script: |
-          if ('${{ github.event_name }}' != 'pull_request') {
-            console.log('Not a PR, skipping');
-            return;
-          }
+          # if ('${{ github.event_name }}' != 'pull_request') {
+          #   console.log('Not a PR, skipping');
+          #   return;
+          # }
           const { data } = await github.rest.pulls.get({
             owner: context.repo.owner,
             repo: context.repo.repo,
