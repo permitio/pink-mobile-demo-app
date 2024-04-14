@@ -1,16 +1,17 @@
 name: demo-new-env
 
-on: push
-  # pull_request:
-  #   types: [labeled]
+on:
+  pull_request:
+    types: [labeled]
 
 env:
-  PROJECT_ID: 7f55831d77c642739bc17733ab0af138 #Demo project id (under 'Permit.io Tests' workspace), project Demo
+  PROJECT_ID: 538e459351a847058fe28f1e6679b87b #Demo project id (under 'Permit.io Tests' workspace), project Demo
   PR_LABEL: authz
+  #PR_NUMBER: ${{ github.event.number }} # PR number optional - cheange ${{ steps.extract_branch.outputs.branch }} with ${{ env.PR_NUMBER }} in the job
 
 jobs:
   demo-label:
-    #if: ${{ github.event.label.name == '${{ env.PR_LABEL }}' }}
+    if: ${{ github.event.label.name == '${{ env.PR_LABEL }}' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -84,16 +85,12 @@ jobs:
       with:
         github-token: ${{ secrets.TOKEN_GITHUB }}
         script: |
-          # if ('${{ github.event_name }}' != 'pull_request') {
-          #   console.log('Not a PR, skipping');
-          #   return;
-          # }
           const { data } = await github.rest.pulls.get({
             owner: context.repo.owner,
             repo: context.repo.repo,
             pull_number: context.payload.pull_request.number
           });
-          const comment = `API Key of the new environment pr-${{ steps.extract_branch.outputs.branch }}: ${{ env.ENV_API_KEY }}`;
+          const comment = `API Key of the new environment: ${{ env.ENV_API_KEY }}`;
           await github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
