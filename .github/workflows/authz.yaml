@@ -45,6 +45,7 @@ jobs:
 
         # Extract the secret from the response which is the API_KEY of the new env
         echo "ENV_API_KEY=$(echo "$response" | jq -r '.secret')" >> $GITHUB_ENV
+        ENV_API_KEY=$(echo "$response" | jq -r '.secret')
 
         echo "New env api key: $ENV_API_KEY"
     
@@ -55,10 +56,11 @@ jobs:
           -H 'Content-Type: application/json')
 
         # Extract and echo the ID of the "dev" environment
-        echo "DEV_ID=$("$response" | jq -r '.[] | select(.key == "dev") | .id')" >> $GITHUB_ENV
+        DEV_ID=$(echo "$response" | jq -r '.[] | select(.key == "dev") | .id')
+        echo "DEV_ID=$(echo "$response" | jq -r '.[] | select(.key == "dev") | .id')" >> $GITHUB_ENV
 
+        # Print the Development env ID
         echo "Development env ID is: $DEV_ID"
-
 
     - name: Copy from 'Development' to 'pr-${{ steps.extract_branch.outputs.branch }}'
       run: |
