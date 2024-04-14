@@ -33,6 +33,7 @@ jobs:
 
         # Extract the new env id
         echo "ENV_ID=$(echo "$response" | jq -r '.id')" >> $GITHUB_ENV
+        ENV_ID=$(echo "$response" | jq -r '.id')
 
         # Print the new env id
         echo "New env ID: $ENV_ID"
@@ -44,10 +45,14 @@ jobs:
           -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}')
 
         # Extract the secret from the response which is the API_KEY of the new env
-        echo "ENV_API_KEY=$(echo "$response" | jq -r '.secret')" >> $GITHUB_ENV
         ENV_API_KEY=$(echo "$response" | jq -r '.secret')
 
+        # Set the extracted API key as an environment variable
+        echo "ENV_API_KEY=$ENV_API_KEY" >> $GITHUB_ENV
+
+        # Print the new env api key
         echo "New env api key: $ENV_API_KEY"
+
     
     - name: Fetch Development env id
       run: |
@@ -65,13 +70,14 @@ jobs:
     - name: Copy from 'Development' to 'pr-${{ steps.extract_branch.outputs.branch }}'
       run: |
         curl -X POST https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs/${{ env.DEV_ID }}/copy \
-          -H 'Authorization: Bearer {{ secrets.PROJECT_API_KEY }}' \
+          -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
           -H 'Content-Type: application/json' \
           -d '{
             "target_env": {
                 "existing": "${{ env.ENV_ID }}"
             }
         }'
+
 
     - name: Comment PR with api_key of new env
       uses: actions/github-script@v5
