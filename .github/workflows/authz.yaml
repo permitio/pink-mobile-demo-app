@@ -7,6 +7,7 @@ on: push
 env:
   PROJECT_ID: 538e459351a847058fe28f1e6679b87b #Demo project id (under 'Permit.io Tests' workspace), project Demo
   PR_LABEL: authz
+  PR_NUMBER: ${{ github.event.number }}
 
 jobs:
   demo-label:
@@ -16,15 +17,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Creation env pr-${{ github.event.number }} under 'Permit.io Tests' workspace, project Demo
+    - name: Creation env pr-${{ env.PR_NUMBER }} under 'Permit.io Tests' workspace, project Demo
       run: |
         response=$(curl -X POST \
           https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs \
           -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
           -H 'Content-Type: application/json' \
           -d '{
-          "key": "pr-${{ github.event.number }}",
-          "name": "pr-${{ github.event.number }}"
+          "key": "pr-${{ env.PR_NUMBER }}",
+          "name": "pr-${{ env.PR_NUMBER }}"
         }')
 
         # Extract the new env id
@@ -45,7 +46,7 @@ jobs:
     
     - name: Fetch Development env id
       run: |
-        response=$(curl -s -X GET https://api.permit.io/v2/projects/{{ env.PROJECT_ID }}/envs \
+        response=$(curl -s -X GET https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs \
           -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
           -H 'Content-Type: application/json')
 
@@ -55,7 +56,7 @@ jobs:
         echo "Development env ID is: $DEV_ID"
 
 
-    - name: Copy from 'Development' to 'pr-${{ github.event.number }}'
+    - name: Copy from 'Development' to 'pr-${{ env.PR_NUMBER }}'
       run: |
         curl -X POST https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs/${{ env.DEV_ID }}/copy \
           -H 'Authorization: Bearer {{ secrets.PROJECT_API_KEY }}' \
@@ -80,7 +81,7 @@ jobs:
             repo: context.repo.repo,
             pull_number: context.payload.pull_request.number
           });
-          const comment = `API Key of the new environment pr-${{ github.event.number }}: ${{ env.ENV_API_KEY }}`;
+          const comment = `API Key of the new environment pr-${{ env.PR_NUMBER }}: ${{ env.ENV_API_KEY }}`;
           await github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
