@@ -27,13 +27,14 @@ jobs:
           -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
           -H 'Content-Type: application/json' \
           -d '{
-          "key": "pr-${{ steps.extract_branch.outputs.branch }}",
-          "name": "pr-${{ steps.extract_branch.outputs.branch }}"
-        }')
+            "key": "pr-${{ steps.extract_branch.outputs.branch }}",
+            "name": "pr-${{ steps.extract_branch.outputs.branch }}"
+          }')
 
         # Extract the new env id
-        echo "ENV_ID=$(echo $response | jq -r '.id')" >> $GITHUB_ENV
+        ENV_ID=$(echo "$response" | jq -r '.id')
 
+        # Print the new env id
         echo "New env ID: $ENV_ID"
 
     - name: Fetch API_KEY of ${{ env.ENV_ID }}
