@@ -10,8 +10,8 @@ env:
   #PR_NUMBER: ${{ github.event.number }} # PR number optional - cheange ${{ steps.extract_branch.outputs.branch }} with ${{ env.PR_NUMBER }} in the job
 
 jobs:
-  demo-label:
-    if: ${{ github.event.label.name == '${{ env.PR_LABEL }}' }}
+  demo-new-env:
+    if: github.event.label.name == ${{ env.PR_LABEL }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -78,7 +78,6 @@ jobs:
                 "existing": "${{ env.ENV_ID }}"
             }
         }'
-
 
     - name: Comment PR with api_key of new env
       uses: actions/github-script@v5

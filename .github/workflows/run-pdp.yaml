@@ -10,7 +10,7 @@ env:
   PR_LABEL: authz
 
 jobs:
-  demo-label:
+  demo-run-pdp-and-tests:
     if: ${{ github.event.label.name == '${{ env.PR_LABEL }}' }}
     runs-on: ubuntu-latest
     steps:

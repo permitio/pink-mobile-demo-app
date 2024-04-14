@@ -1,0 +1,64 @@
+name: demo-merging
+
+on:
+  pull_request:
+    types: [closed]
+
+env:
+  PROJECT_ID: 538e459351a847058fe28f1e6679b87b #Demo project id (under 'Permit.io Tests' workspace), project Demo
+  PR_LABEL: authz
+
+jobs:
+  demo-merging:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Extract branch name
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      id: extract_branch
+
+    - name: Fetch pr-${{ steps.extract_branch.outputs.branch }} env id
+      run: |
+        response=$(curl -s -X GET https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs \
+          -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
+          -H 'Content-Type: application/json')
+
+        # Extract and echo the ID of the "pr-${{ steps.extract_branch.outputs.branch }}" environment
+        EXISTING_ID=$(echo "$response" | jq -r '.[] | select(.key == "pr-${{ steps.extract_branch.outputs.branch }}") | .id')
+        echo "EXISTING_ID=$(echo "$response" | jq -r '.[] | select(.key == "pr-${{ steps.extract_branch.outputs.branch }}") | .id')" >> $GITHUB_ENV
+
+        # Print the Development env ID
+        echo "Development env ID is: $EXISTING_ID"
+
+    - name: Fetch production env id
+      run: |
+        response=$(curl -s -X GET https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs \
+          -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
+          -H 'Content-Type: application/json')
+
+        # Extract and echo the ID of the "production" environment
+        PROD_ID=$(echo "$response" | jq -r '.[] | select(.key == "production") | .id')
+        echo "PROD_ID=$(echo "$response" | jq -r '.[] | select(.key == "production") | .id')" >> $GITHUB_ENV
+
+        # Print the Development env ID
+        echo "Development env ID is: $PROD_ID"
+
+    - name: Copy from 'pr-${{ steps.extract_branch.outputs.branch }}' to Production
+      run: |
+        curl -X POST https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs/${{ env.EXISTING_ID }}/copy \
+          -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
+          -H 'Content-Type: application/json' \
+          -d '{
+            "target_env": {
+                "existing": "${{ env.PROD_ID }}"
+            }
+        }'
+      
+    - name: Delete env pr-${{ steps.extract_branch.outputs.branch }}
+      run: |
+        curl -X DELETE \
+          https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs/${{ env.EXISTING_ID }} \
+          -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}'
