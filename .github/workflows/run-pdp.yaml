@@ -1,0 +1,59 @@
+name: demo-run-pdp-and-tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: 538e459351a847058fe28f1e6679b87b #Demo project id (under 'Permit.io Tests' workspace), project Demo
+  PR_LABEL: authz
+
+jobs:
+  demo-label:
+    if: ${{ github.event.label.name == '${{ env.PR_LABEL }}' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Extract branch name
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      id: extract_branch
+
+    - name: Fetch pr-${{ steps.extract_branch.outputs.branch }} env id
+      run: |
+        response=$(curl -s -X GET https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs \
+          -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
+          -H 'Content-Type: application/json')
+
+        # Extract and echo the ID of the "pr-${{ steps.extract_branch.outputs.branch }}" environment
+        EXISTING_ID=$(echo "$response" | jq -r '.[] | select(.key == "pr-${{ steps.extract_branch.outputs.branch }}") | .id')
+        echo "EXISTING_ID=$(echo "$response" | jq -r '.[] | select(.key == "pr-${{ steps.extract_branch.outputs.branch }}") | .id')" >> $GITHUB_ENV
+
+        # Print the Development env ID
+        echo "Development env ID is: $EXISTING_ID"
+
+    - name: Fetch API_KEY of pr-${{ steps.extract_branch.outputs.branch }}
+      run: |
+        response=$(curl -X GET \
+          https://api.permit.io/v2/api-key/${{ env.PROJECT_ID }}/${{ env.EXISTING_ID }} \
+          -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}')
+
+        # Extract the secret from the response which is the API_KEY of the new env
+        ENV_API_KEY=$(echo "$response" | jq -r '.secret')
+
+        # Set the extracted API key as an environment variable
+        echo "ENV_API_KEY=$ENV_API_KEY" >> $GITHUB_ENV
+
+        # Print the new env api key
+        echo "New env api key: $ENV_API_KEY"
+
+    - name: Install Docker
+      uses: docker-practice/actions-setup-docker@master
+
+    - name: local PDP runnning
+      run: docker run -d -p 7766:7000 --env PDP_API_KEY=${{ env.ENV_API_KEY }} --env PDP_DEBUG=true permitio/pdp-v2:latest
+
+    - name: Run Tests
+      run: echo "Run tests here"
