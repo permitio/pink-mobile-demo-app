@@ -5,7 +5,7 @@ on: push
   #   types: [labeled]
 
 env:
-  PROJECT_ID: 538e459351a847058fe28f1e6679b87b #Demo project id (under 'Permit.io Tests' workspace), project Demo
+  PROJECT_ID: 7f55831d77c642739bc17733ab0af138 #Demo project id (under 'Permit.io Tests' workspace), project Demo
   PR_LABEL: authz
 
 jobs:
