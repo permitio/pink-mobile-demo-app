@@ -11,7 +11,7 @@ env:
 
 jobs:
   demo-new-env:
-    if: ${{ github.event.label.name == $env.PR_LABEL }}
+    if: ${{ github.event.label.name == env.PR_LABEL }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
