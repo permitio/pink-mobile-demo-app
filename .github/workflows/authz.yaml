@@ -32,7 +32,7 @@ jobs:
           }')
 
         # Extract the new env id
-        ENV_ID=$(echo "$response" | jq -r '.id')
+        echo "ENV_ID=$(echo "$response" | jq -r '.id')" >> $GITHUB_ENV
 
         # Print the new env id
         echo "New env ID: $ENV_ID"
