@@ -10,7 +10,7 @@ env:
 
 jobs:
   demo-merging:
-    if: github.event.pull_request.merged == true
+    if: ${{ github.event.pull_request.merged == true && github.event.label.name == env.PR_LABEL }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
