@@ -6,11 +6,10 @@ on:
 
 env:
   PROJECT_ID: 538e459351a847058fe28f1e6679b87b #Demo project id (under 'Permit.io Tests' workspace), project Demo
-  PR_LABEL: authz
 
 jobs:
   demo-merging:
-    if: ${{ github.event.pull_request.merged == true && github.event.label.name == env.PR_LABEL }}
+    if: ${{ github.event.pull_request.merged == true && github.event.label.name == 'authz' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code

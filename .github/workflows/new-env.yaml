@@ -6,12 +6,11 @@ on:
 
 env:
   PROJECT_ID: 538e459351a847058fe28f1e6679b87b #Demo project id (under 'Permit.io Tests' workspace), project Demo
-  PR_LABEL: authz
   #PR_NUMBER: ${{ github.event.number }} # PR number optional - cheange ${{ steps.extract_branch.outputs.branch }} with ${{ env.PR_NUMBER }} in the job
 
 jobs:
   demo-new-env:
-    if: ${{ github.event.pull_request.labels == '${{ env.PR_LABEL }}' }}
+    if: github.event.pull_request.labels == 'authz'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
