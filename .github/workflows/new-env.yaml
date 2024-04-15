@@ -1,0 +1,100 @@
+name: demo-new-env
+
+on:
+  pull_request:
+    types: [labeled]
+
+env:
+  PROJECT_ID: 538e459351a847058fe28f1e6679b87b #Demo project id (under 'Permit.io Tests' workspace), project Demo
+  PR_LABEL: authz
+  #PR_NUMBER: ${{ github.event.number }} # PR number optional - cheange ${{ steps.extract_branch.outputs.branch }} with ${{ env.PR_NUMBER }} in the job
+
+jobs:
+  demo-new-env:
+    if: ${{ github.event.label.name == 'env.PR_LABEL' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Extract branch name
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      id: extract_branch
+
+    - name: Creation env pr-${{ steps.extract_branch.outputs.branch }} under 'Permit.io Tests' workspace, project Demo
+      run: |
+        response=$(curl -X POST \
+          https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs \
+          -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
+          -H 'Content-Type: application/json' \
+          -d '{
+            "key": "pr-${{ steps.extract_branch.outputs.branch }}",
+            "name": "pr-${{ steps.extract_branch.outputs.branch }}"
+          }')
+
+        # Extract the new env id
+        echo "ENV_ID=$(echo "$response" | jq -r '.id')" >> $GITHUB_ENV
+        ENV_ID=$(echo "$response" | jq -r '.id')
+
+        # Print the new env id
+        echo "New env ID: $ENV_ID"
+
+    - name: Fetch API_KEY of ${{ env.ENV_ID }}
+      run: |
+        response=$(curl -X GET \
+          https://api.permit.io/v2/api-key/${{ env.PROJECT_ID }}/${{ env.ENV_ID }} \
+          -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}')
+
+        # Extract the secret from the response which is the API_KEY of the new env
+        ENV_API_KEY=$(echo "$response" | jq -r '.secret')
+
+        # Set the extracted API key as an environment variable
+        echo "ENV_API_KEY=$ENV_API_KEY" >> $GITHUB_ENV
+
+        # Print the new env api key
+        echo "New env api key: $ENV_API_KEY"
+
+    
+    - name: Fetch Development env id
+      run: |
+        response=$(curl -s -X GET https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs \
+          -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
+          -H 'Content-Type: application/json')
+
+        # Extract and echo the ID of the "dev" environment
+        DEV_ID=$(echo "$response" | jq -r '.[] | select(.key == "dev") | .id')
+        echo "DEV_ID=$(echo "$response" | jq -r '.[] | select(.key == "dev") | .id')" >> $GITHUB_ENV
+
+        # Print the Development env ID
+        echo "Development env ID is: $DEV_ID"
+
+    - name: Copy from 'Development' to 'pr-${{ steps.extract_branch.outputs.branch }}'
+      run: |
+        curl -X POST https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs/${{ env.DEV_ID }}/copy \
+          -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
+          -H 'Content-Type: application/json' \
+          -d '{
+            "target_env": {
+                "existing": "${{ env.ENV_ID }}"
+            }
+        }'
+
+    - name: Comment PR with api_key of new env
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.TOKEN_GITHUB }}
+        script: |
+          const { data } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.payload.pull_request.number
+          });
+          const comment = `API Key of the new environment: ${{ env.ENV_API_KEY }}`;
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.payload.pull_request.number,
+            body: comment
+          });
+          console.log(`Commented on PR with: ${comment}`);
+  
