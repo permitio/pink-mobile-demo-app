@@ -10,7 +10,7 @@ env:
 
 jobs:
   demo-run-pdp-and-tests:
-    if: contains( github.event.pull_request.labels.*.name, $PR_LABEL)
+    if: contains( github.event.pull_request.labels.*.name, $env.PR_LABEL )
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
