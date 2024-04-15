@@ -10,7 +10,7 @@ env:
 
 jobs:
   demo-run-pdp-and-tests:
-    if: github.event.pull_request.labels == 'authz'
+    if: contains( github.event.pull_request.labels.*.name, 'authz')
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
