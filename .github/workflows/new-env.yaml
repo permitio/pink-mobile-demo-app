@@ -2,7 +2,7 @@ name: demo-new-env
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, reopened]
 
 env:
   PROJECT_ID: 538e459351a847058fe28f1e6679b87b #Demo project id (under 'Permit.io Tests' workspace), project Demo

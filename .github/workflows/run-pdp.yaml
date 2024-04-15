@@ -29,8 +29,8 @@ jobs:
         EXISTING_ID=$(echo "$response" | jq -r '.[] | select(.key == "pr-${{ steps.extract_branch.outputs.branch }}") | .id')
         echo "EXISTING_ID=$(echo "$response" | jq -r '.[] | select(.key == "pr-${{ steps.extract_branch.outputs.branch }}") | .id')" >> $GITHUB_ENV
 
-        # Print the Development env ID
-        echo "Development env ID is: $EXISTING_ID"
+        # Print the PR env ID
+        echo "PR env ID is: $EXISTING_ID"
 
     - name: Fetch API_KEY of pr-${{ steps.extract_branch.outputs.branch }}
       run: |
@@ -38,14 +38,14 @@ jobs:
           https://api.permit.io/v2/api-key/${{ env.PROJECT_ID }}/${{ env.EXISTING_ID }} \
           -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}')
 
-        # Extract the secret from the response which is the API_KEY of the new env
+        # Extract the secret from the response which is the API_KEY of the PR env
         ENV_API_KEY=$(echo "$response" | jq -r '.secret')
 
         # Set the extracted API key as an environment variable
         echo "ENV_API_KEY=$ENV_API_KEY" >> $GITHUB_ENV
 
-        # Print the new env api key
-        echo "New env api key: $ENV_API_KEY"
+        # Print the PR env api key
+        echo "PR env api key: $ENV_API_KEY"
 
     - name: Install Docker
       uses: docker-practice/actions-setup-docker@master

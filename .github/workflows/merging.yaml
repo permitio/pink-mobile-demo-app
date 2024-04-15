@@ -29,8 +29,8 @@ jobs:
         EXISTING_ID=$(echo "$response" | jq -r '.[] | select(.key == "pr-${{ steps.extract_branch.outputs.branch }}") | .id')
         echo "EXISTING_ID=$(echo "$response" | jq -r '.[] | select(.key == "pr-${{ steps.extract_branch.outputs.branch }}") | .id')" >> $GITHUB_ENV
 
-        # Print the Development env ID
-        echo "Development env ID is: $EXISTING_ID"
+        # Print the PR env ID
+        echo "PR env ID is: $EXISTING_ID"
 
     - name: Fetch production env id
       run: |
@@ -42,8 +42,8 @@ jobs:
         PROD_ID=$(echo "$response" | jq -r '.[] | select(.key == "production") | .id')
         echo "PROD_ID=$(echo "$response" | jq -r '.[] | select(.key == "production") | .id')" >> $GITHUB_ENV
 
-        # Print the Development env ID
-        echo "Development env ID is: $PROD_ID"
+        # Print the production env ID
+        echo "Production env ID is: $PROD_ID"
 
     - name: Copy from 'pr-${{ steps.extract_branch.outputs.branch }}' to Production
       run: |
