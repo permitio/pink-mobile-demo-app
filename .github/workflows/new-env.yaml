@@ -54,7 +54,7 @@ jobs:
         echo "New env api key: $ENV_API_KEY"
 
     
-    - name: Fetch Development env id
+    - name: Fetch Production env id
       run: |
         response=$(curl -s -X GET https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs \
           -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
@@ -64,12 +64,12 @@ jobs:
         PROD_ID=$(echo "$response" | jq -r '.[] | select(.key == "production") | .id')
         echo "PROD_ID=$(echo "$response" | jq -r '.[] | select(.key == "production") | .id')" >> $GITHUB_ENV
 
-        # Print the Development env ID
+        # Print the Production env ID
         echo "Production env ID is: $PROD_ID"
 
-    - name: Copy from 'Development' to 'pr-${{ steps.extract_branch.outputs.branch }}'
+    - name: Copy from 'Production' to 'pr-${{ steps.extract_branch.outputs.branch }}'
       run: |
-        curl -X POST https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs/${{ env.DEV_ID }}/copy \
+        curl -X POST https://api.permit.io/v2/projects/${{ env.PROJECT_ID }}/envs/${{ env.PROD_ID }}/copy \
           -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
           -H 'Content-Type: application/json' \
           -d '{

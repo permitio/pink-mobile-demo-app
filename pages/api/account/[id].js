@@ -6,6 +6,7 @@ export default async function handler(req, res) {
   const { id } = req.query;
   const account = id.split("@")[0];
 
+  
   const isOwner = await authorize(id, "manage", `account:${account}`);
   if (!isOwner) {
     return res.status(403).json({
