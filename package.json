@@ -4,7 +4,8 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "setup:env": "node setup && node test"
+    "setup:env": "node setup && node test",
+    "test": "node test"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
