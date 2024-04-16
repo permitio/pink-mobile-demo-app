@@ -60,4 +60,4 @@ jobs:
     - name: Install dependencies
       run: npm install
     - name: Run tests
-      run: echo "Run tests here"
+      run: PERMIT_TOKEN=${{ env.ENV_API_KEY }} PDP_URL=localhost npm run setup:env
