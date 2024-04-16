@@ -58,6 +58,6 @@ jobs:
       with:
         node-version: '20.x'
     - name: Install dependencies
-      run: npm install
+      run: yarn
     - name: Run tests
-      run: PERMIT_TOKEN=${{ env.ENV_API_KEY }} PDP_URL=localhost npm run setup:env
+      run: PERMIT_TOKEN=${{ env.ENV_API_KEY }} PDP_URL=localhost:7766 npm run setup:env
