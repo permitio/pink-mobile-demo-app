@@ -305,6 +305,4 @@ const users = async () => {
   console.log("Roles created");
   await conditionSets();
   console.log("Condition sets created");
-  await users();
-  console.log("Users created");
 })();

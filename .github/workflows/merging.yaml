@@ -9,7 +9,7 @@ env:
 
 jobs:
   demo-merging:
-    if: ${{ github.event.pull_request.merged == true && contains( github.event.pull_request.labels.*.name, 'authz') }}
+    if: ${{ github.event.pull_request.merged == true && contains( github.event.pull_request.labels.*.name, 'permissions') }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code

@@ -10,7 +10,7 @@ env:
 
 jobs:
   demo-new-env:
-    if: contains( github.event.pull_request.labels.*.name, 'authz')
+    if: contains( github.event.pull_request.labels.*.name, 'permissions')
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -60,12 +60,12 @@ jobs:
           -H 'Authorization: Bearer ${{ secrets.PROJECT_API_KEY }}' \
           -H 'Content-Type: application/json')
 
-        # Extract and echo the ID of the "dev" environment
-        DEV_ID=$(echo "$response" | jq -r '.[] | select(.key == "dev") | .id')
-        echo "DEV_ID=$(echo "$response" | jq -r '.[] | select(.key == "dev") | .id')" >> $GITHUB_ENV
+        # Extract and echo the ID of the "production" environment
+        PROD_ID=$(echo "$response" | jq -r '.[] | select(.key == "production") | .id')
+        echo "PROD_ID=$(echo "$response" | jq -r '.[] | select(.key == "production") | .id')" >> $GITHUB_ENV
 
         # Print the Development env ID
-        echo "Development env ID is: $DEV_ID"
+        echo "Production env ID is: $PROD_ID"
 
     - name: Copy from 'Development' to 'pr-${{ steps.extract_branch.outputs.branch }}'
       run: |

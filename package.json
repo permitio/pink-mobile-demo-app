@@ -3,7 +3,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "start": "next start"
+    "start": "next start",
+    "setup:env": "node setup && node test"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
