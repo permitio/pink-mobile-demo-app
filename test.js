@@ -124,8 +124,10 @@ const users = async () => {
 };
 
 (async () => {
-  await users();
-  console.log("Mock users created");
+  try {
+    await users();
+    console.log("Mock users created");
+  } catch(e) {}
   const allowed = await permit.check(
     "albus@pink.mobile",
     "list",
