@@ -10,6 +10,8 @@ export default async function handler(req, res) {
         });
     }
 
+    console.log('new feature');
+
     const users = await listUsers();
 
     return res.status(200).json(users);
