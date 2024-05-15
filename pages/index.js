@@ -13,6 +13,8 @@ export default function Home() {
 	const [selectedRepresentative, setSelectedRepresentative] = useState("");
 	const [allUsers, setAllUsers] = useState([]);
 
+	console.log('change that require policy change');
+
 	async function fetchRepresentatives() {
 		const response = await fetch("/api/representative", {
 			method: "POST",
