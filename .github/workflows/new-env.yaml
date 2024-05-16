@@ -88,7 +88,7 @@ jobs:
             repo: context.repo.repo,
             pull_number: context.payload.pull_request.number
           });
-          const comment = `API Key of the new environment: ${{ env.ENV_API_KEY }}`;
+          const comment = `API Key of the new environment: XXX`; #${{ env.ENV_API_KEY }}
           await github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
