@@ -1,6 +1,5 @@
 const { Permit } = require("permitio");
 require("dotenv").config();
-// This is a script to setup the resources, roles, condition sets, and users for the Permit demo.
 const PERMIT_SDK_KEY = process.env.PERMIT_TOKEN;
 
 const appUsers = [
