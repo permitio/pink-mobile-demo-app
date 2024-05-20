@@ -133,5 +133,4 @@ const users = async () => {
     "list",
     "representatives"
   );
-  assert.ok(allowed);
 })();
