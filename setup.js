@@ -1,6 +1,5 @@
 const { Permit } = require("permitio");
 require("dotenv").config();
-
 const PERMIT_SDK_KEY = process.env.PERMIT_TOKEN;
 
 const appUsers = [
