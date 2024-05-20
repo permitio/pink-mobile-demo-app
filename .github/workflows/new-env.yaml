@@ -78,22 +78,22 @@ jobs:
             }
         }'
 
-    - name: Comment PR with api_key of new env
-      uses: actions/github-script@v5
-      with:
-        github-token: ${{ secrets.TOKEN_GITHUB }}
-        script: |
-          const { data } = await github.rest.pulls.get({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: context.payload.pull_request.number
-          });
-          const comment = `API Key of the new environment: XXX`; #${{ env.ENV_API_KEY }}
-          await github.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.payload.pull_request.number,
-            body: comment
-          });
-          console.log(`Commented on PR with: ${comment}`);
-  
+#    - name: Comment PR with api_key of new env
+#      uses: actions/github-script@v5
+#      with:
+#        github-token: ${{ secrets.TOKEN_GITHUB }}
+#        script: |
+#          const { data } = await github.rest.pulls.get({
+#            owner: context.repo.owner,
+#            repo: context.repo.repo,
+#            pull_number: context.payload.pull_request.number
+#          });
+#          const comment = `API Key of the new environment: XXX`; #${{ env.ENV_API_KEY }}
+#          await github.rest.issues.createComment({
+#            owner: context.repo.owner,
+#            repo: context.repo.repo,
+#            issue_number: context.payload.pull_request.number,
+#            body: comment
+#          });
+#          console.log(`Commented on PR with: ${comment}`);
+#
