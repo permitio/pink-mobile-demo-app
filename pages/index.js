@@ -95,7 +95,7 @@ export default function Home() {
 			marginTop={"60px"}
 		>
 			<Text fontSize="xl" color="pink.500" mb={4}>
-				Pink-Mobile
+				Pink Mobile
 			</Text>
 			<TopNavigation onTabChange={handleTabChange} tabValue={tabValue} />
 			<VStack
