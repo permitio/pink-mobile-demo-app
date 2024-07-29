@@ -13,7 +13,7 @@ export default function Home() {
 	const [selectedRepresentative, setSelectedRepresentative] = useState("");
 	const [allUsers, setAllUsers] = useState([]);
 
-	console.log('Breaking policy changes');
+	console.log('Breaking policy changes, now in the right environment');
 
 	async function fetchRepresentatives() {
 		const response = await fetch("/api/representative", {
